@@ -4,9 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Path of the Apothecary</title>
+<title>Path of the Apothecary - ตรวจสอบสถานะการสมัคร</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
 
 <style>
 
@@ -19,59 +21,28 @@ font-family:'Prompt',sans-serif;
 
 body{
 min-height:100vh;
-background:
-linear-gradient(
-135deg,
-#3a1c71,
-#6a3093,
-#a044ff
-);
-overflow-x:hidden;
+background:linear-gradient(135deg,#3a1c71,#6a3093,#a044ff);
 padding:30px;
-}
-
-body::before{
-content:"";
-position:fixed;
-width:600px;
-height:600px;
-background:rgba(255,255,255,.08);
-border-radius:50%;
-top:-250px;
-right:-150px;
-filter:blur(80px);
-}
-
-body::after{
-content:"";
-position:fixed;
-width:500px;
-height:500px;
-background:rgba(255,255,255,.05);
-border-radius:50%;
-bottom:-200px;
-left:-100px;
-filter:blur(80px);
+overflow-x:hidden;
 }
 
 .container{
-max-width:1100px;
+max-width:900px;
 margin:auto;
 }
 
 .header{
 text-align:center;
-margin-bottom:35px;
+margin-bottom:30px;
 }
 
 .logo{
 width:140px;
-height:auto;
 margin-bottom:15px;
 }
 
 .title{
-font-size:2.8rem;
+font-size:2.5rem;
 font-weight:700;
 color:white;
 }
@@ -82,12 +53,11 @@ margin-top:10px;
 }
 
 .search-card{
-backdrop-filter:blur(15px);
 background:rgba(255,255,255,.12);
+backdrop-filter:blur(15px);
 border:1px solid rgba(255,255,255,.2);
 padding:25px;
-border-radius:24px;
-margin-bottom:30px;
+border-radius:25px;
 }
 
 .search-box{
@@ -96,92 +66,58 @@ gap:12px;
 flex-wrap:wrap;
 }
 
-input{
+.search-box input{
 flex:1;
-min-width:250px;
-padding:16px;
+padding:15px;
 border:none;
-border-radius:16px;
+border-radius:15px;
 font-size:16px;
 outline:none;
 }
 
-button{
-padding:16px 24px;
+.search-box button{
+padding:15px 25px;
 border:none;
-border-radius:16px;
+border-radius:15px;
 font-weight:700;
 cursor:pointer;
 background:white;
 transition:.3s;
 }
 
-button:hover{
+.search-box button:hover{
 transform:translateY(-2px);
 }
 
-.stats{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
-gap:15px;
-margin-bottom:30px;
-}
-
-.stat{
-background:rgba(255,255,255,.12);
-backdrop-filter:blur(15px);
-border-radius:20px;
-padding:20px;
-color:white;
-text-align:center;
-}
-
-.stat h3{
-font-size:1.8rem;
-}
-
-.results{
-display:grid;
-grid-template-columns:repeat(auto-fill,minmax(320px,1fr));
-gap:20px;
+.result{
+margin-top:25px;
 }
 
 .card{
 background:white;
-border-radius:24px;
-padding:20px;
+border-radius:25px;
+padding:25px;
 box-shadow:0 10px 30px rgba(0,0,0,.15);
-transition:.3s;
-}
-
-.card:hover{
-transform:translateY(-5px);
-}
-
-.team-code{
-font-size:.9rem;
-color:#666;
-margin-bottom:5px;
 }
 
 .team-name{
-font-size:1.3rem;
+font-size:1.5rem;
 font-weight:700;
-margin-bottom:12px;
 color:#5b21b6;
+margin-bottom:10px;
 }
 
-.member{
-margin-bottom:8px;
+.info{
+margin:10px 0;
+font-size:1rem;
 }
 
 .status{
 display:inline-block;
-padding:8px 14px;
+margin-top:15px;
+padding:8px 16px;
 border-radius:999px;
-font-size:.85rem;
 font-weight:600;
-margin-top:10px;
 }
 
 .confirmed{
@@ -199,11 +135,18 @@ background:#fee2e2;
 color:#991b1b;
 }
 
-.empty{
+.message{
 text-align:center;
 color:white;
-font-size:1.2rem;
-margin-top:30px;
+margin-top:20px;
+font-size:1.1rem;
+}
+
+.footer{
+text-align:center;
+margin-top:40px;
+color:rgba(255,255,255,.7);
+font-size:.9rem;
 }
 
 @media(max-width:600px){
@@ -216,7 +159,7 @@ font-size:2rem;
 flex-direction:column;
 }
 
-button{
+.search-box button{
 width:100%;
 }
 
@@ -238,7 +181,7 @@ width:100%;
 </div>
 
 <div class="subtitle">
-ระบบตรวจสอบข้อมูลผู้สมัคร
+ระบบตรวจสอบสถานะการสมัคร
 </div>
 
 </div>
@@ -250,171 +193,135 @@ width:100%;
 <input
 type="text"
 id="searchInput"
-placeholder="ค้นหารหัสทีม ชื่อทีม หรือชื่อสมาชิก">
+placeholder="กรอกรหัสทีม เช่น P001">
 
-<button onclick="searchTeam()">
+<button onclick="searchData()">
 ค้นหา
 </button>
 
 </div>
 
-</div>
-
-<div class="stats">
-
-<div class="stat">
-<h3 id="teamCount">0</h3>
-<p>ทีมทั้งหมด</p>
-</div>
-
-<div class="stat">
-<h3 id="confirmCount">0</h3>
-<p>ยืนยันแล้ว</p>
-</div>
+<div id="results" class="result"></div>
 
 </div>
 
-<div id="results" class="results"></div>
-
-<div id="empty" class="empty"></div>
+<div class="footer">
+Path of the Apothecary © 2026
+</div>
 
 </div>
 
 <script>
 
-const teams = [
+// เปลี่ยนตรงนี้เป็น Spreadsheet ID ของคุณ
+const SHEET_ID = "YOUR_SPREADSHEET_ID";
 
-{
-code:"P001",
-team:"The Alchemist",
-members:[
-"Anna",
-"Beam",
-"Film"
-],
-status:"ยืนยันแล้ว"
-},
+const CSV_URL =
+`https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv`;
 
-{
-code:"P002",
-team:"Potion Hunter",
-members:[
-"Mint",
-"Palm",
-"Gift"
-],
-status:"รอตรวจสอบ"
-},
+let teams = [];
 
-{
-code:"P003",
-team:"Herbal Masters",
-members:[
-"Nene",
-"Ice",
-"Toon"
-],
-status:"ยืนยันแล้ว"
+function loadData(){
+
+Papa.parse(CSV_URL,{
+
+download:true,
+header:true,
+
+complete:function(result){
+
+teams = result.data;
+
 }
 
-];
+});
 
-function renderCards(data){
+}
+
+function searchData(){
+
+const keyword =
+document
+.getElementById("searchInput")
+.value
+.trim()
+.toUpperCase();
 
 const results =
 document.getElementById("results");
 
-const empty =
-document.getElementById("empty");
+if(keyword === ""){
 
-results.innerHTML = "";
-
-if(data.length===0){
-
-empty.innerHTML =
-"❌ ไม่พบข้อมูล";
+results.innerHTML =
+"<div class='message'>กรุณากรอกรหัสทีม</div>";
 
 return;
+
 }
 
-empty.innerHTML = "";
+const filtered =
+teams.filter(team =>
 
-data.forEach(team=>{
+(team["รหัสทีม"] || "")
+.toUpperCase()
+=== keyword
 
-let badge="confirmed";
+);
 
-if(team.status==="รอตรวจสอบ")
-badge="pending";
+if(filtered.length === 0){
 
-if(team.status==="ไม่ผ่าน")
-badge="rejected";
+results.innerHTML = `
+<div class="message">
+❌ ไม่พบข้อมูลรหัสทีมนี้
+</div>
+`;
 
-results.innerHTML += `
+return;
+
+}
+
+const team = filtered[0];
+
+let badge = "pending";
+
+if(team["สถานะ"] === "ยืนยันแล้ว"){
+badge = "confirmed";
+}
+
+if(team["สถานะ"] === "ไม่ผ่าน"){
+badge = "rejected";
+}
+
+results.innerHTML = `
 
 <div class="card">
 
-<div class="team-code">
-${team.code}
-</div>
-
 <div class="team-name">
-${team.team}
+${team["ชื่อทีม"]}
 </div>
 
-<div class="member">
-👤 ${team.members.join(", ")}
+<div class="info">
+<b>รหัสทีม:</b> ${team["รหัสทีม"]}
+</div>
+
+<div class="info">
+<b>สมาชิก:</b> ${team["สมาชิก"]}
 </div>
 
 <div class="status ${badge}">
-${team.status}
+${team["สถานะ"]}
 </div>
 
 </div>
 
 `;
 
-});
-
 }
 
-function searchTeam(){
+loadData();
 
-const keyword =
-document
-.getElementById("searchInput")
-.value
-.toLowerCase();
-
-const filtered =
-teams.filter(team=>
-
-team.code.toLowerCase().includes(keyword)
-
-||
-
-team.team.toLowerCase().includes(keyword)
-
-||
-
-team.members.join(" ")
-.toLowerCase()
-.includes(keyword)
-
-);
-
-renderCards(filtered);
-
-}
-
-document.getElementById("teamCount").innerText =
-teams.length;
-
-document.getElementById("confirmCount").innerText =
-teams.filter(
-t=>t.status==="ยืนยันแล้ว"
-).length;
-
-renderCards(teams);
+// รีเฟรชข้อมูลทุก 30 วินาที
+setInterval(loadData,30000);
 
 </script>
 
