@@ -4,151 +4,222 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>PharmQuiz KKU 2026 | Path of the Apothecary</title>
+<title>Path of the Apothecary</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
 
 *{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Prompt',sans-serif;
 }
 
 body{
-    font-family:'Segoe UI',sans-serif;
-    background:linear-gradient(135deg,#0d2b24,#12372a);
-    min-height:100vh;
-    color:white;
+min-height:100vh;
+background:
+linear-gradient(
+135deg,
+#3a1c71,
+#6a3093,
+#a044ff
+);
+overflow-x:hidden;
+padding:30px;
+}
+
+body::before{
+content:"";
+position:fixed;
+width:600px;
+height:600px;
+background:rgba(255,255,255,.08);
+border-radius:50%;
+top:-250px;
+right:-150px;
+filter:blur(80px);
+}
+
+body::after{
+content:"";
+position:fixed;
+width:500px;
+height:500px;
+background:rgba(255,255,255,.05);
+border-radius:50%;
+bottom:-200px;
+left:-100px;
+filter:blur(80px);
 }
 
 .container{
-    width:90%;
-    max-width:1000px;
-    margin:auto;
-    padding:40px 20px;
+max-width:1100px;
+margin:auto;
 }
 
 .header{
-    text-align:center;
-    margin-bottom:40px;
+text-align:center;
+margin-bottom:35px;
 }
 
 .logo{
-    width:120px;
-    margin-bottom:15px;
+width:140px;
+height:auto;
+margin-bottom:15px;
 }
 
-h1{
-    color:#f3d37a;
-    font-size:3rem;
+.title{
+font-size:2.8rem;
+font-weight:700;
+color:white;
 }
 
 .subtitle{
-    color:#d6c28b;
-    font-size:1.2rem;
+color:rgba(255,255,255,.85);
+margin-top:10px;
+}
+
+.search-card{
+backdrop-filter:blur(15px);
+background:rgba(255,255,255,.12);
+border:1px solid rgba(255,255,255,.2);
+padding:25px;
+border-radius:24px;
+margin-bottom:30px;
 }
 
 .search-box{
-    background:white;
-    padding:30px;
-    border-radius:20px;
-    text-align:center;
-    color:black;
-    margin-bottom:30px;
+display:flex;
+gap:12px;
+flex-wrap:wrap;
 }
 
 input{
-    width:70%;
-    padding:15px;
-    border-radius:10px;
-    border:1px solid #ccc;
-    font-size:16px;
+flex:1;
+min-width:250px;
+padding:16px;
+border:none;
+border-radius:16px;
+font-size:16px;
+outline:none;
 }
 
 button{
-    padding:15px 30px;
-    border:none;
-    border-radius:10px;
-    background:#0d5c47;
-    color:white;
-    cursor:pointer;
-    margin-left:10px;
-    font-size:16px;
+padding:16px 24px;
+border:none;
+border-radius:16px;
+font-weight:700;
+cursor:pointer;
+background:white;
+transition:.3s;
 }
 
 button:hover{
-    background:#0f7458;
+transform:translateY(-2px);
 }
 
-.result-card{
-    display:none;
-    background:white;
-    color:black;
-    border-radius:20px;
-    overflow:hidden;
-    box-shadow:0 10px 30px rgba(0,0,0,.2);
+.stats{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+gap:15px;
+margin-bottom:30px;
 }
 
-.result-title{
-    background:#0d5c47;
-    color:white;
-    padding:20px;
-    text-align:center;
-    font-size:24px;
+.stat{
+background:rgba(255,255,255,.12);
+backdrop-filter:blur(15px);
+border-radius:20px;
+padding:20px;
+color:white;
+text-align:center;
 }
 
-table{
-    width:100%;
-    border-collapse:collapse;
+.stat h3{
+font-size:1.8rem;
 }
 
-th{
-    width:30%;
-    background:#f5f5f5;
-    padding:18px;
-    text-align:left;
+.results{
+display:grid;
+grid-template-columns:repeat(auto-fill,minmax(320px,1fr));
+gap:20px;
 }
 
-td{
-    padding:18px;
+.card{
+background:white;
+border-radius:24px;
+padding:20px;
+box-shadow:0 10px 30px rgba(0,0,0,.15);
+transition:.3s;
 }
 
-tr{
-    border-bottom:1px solid #ddd;
+.card:hover{
+transform:translateY(-5px);
+}
+
+.team-code{
+font-size:.9rem;
+color:#666;
+margin-bottom:5px;
+}
+
+.team-name{
+font-size:1.3rem;
+font-weight:700;
+margin-bottom:12px;
+color:#5b21b6;
 }
 
 .member{
-    margin:5px 0;
+margin-bottom:8px;
 }
 
-.status-success{
-    color:#198754;
-    font-weight:bold;
+.status{
+display:inline-block;
+padding:8px 14px;
+border-radius:999px;
+font-size:.85rem;
+font-weight:600;
+margin-top:10px;
 }
 
-.status-pending{
-    color:#ff9800;
-    font-weight:bold;
+.confirmed{
+background:#dcfce7;
+color:#166534;
 }
 
-.status-reject{
-    color:#dc3545;
-    font-weight:bold;
+.pending{
+background:#fef3c7;
+color:#92400e;
 }
 
-.not-found{
-    background:white;
-    color:red;
-    padding:20px;
-    border-radius:15px;
-    text-align:center;
-    display:none;
+.rejected{
+background:#fee2e2;
+color:#991b1b;
 }
 
-.footer{
-    text-align:center;
-    margin-top:30px;
-    color:#d6c28b;
+.empty{
+text-align:center;
+color:white;
+font-size:1.2rem;
+margin-top:30px;
+}
+
+@media(max-width:600px){
+
+.title{
+font-size:2rem;
+}
+
+.search-box{
+flex-direction:column;
+}
+
+button{
+width:100%;
+}
+
 }
 
 </style>
@@ -160,26 +231,26 @@ tr{
 
 <div class="header">
 
-<img src="logo.png" class="logo">
+<img src="โลโก้.jpg" class="logo">
 
-<h1>PHARMQUIZ KKU 2026</h1>
+<div class="title">
+⚗️ Path of the Apothecary
+</div>
 
-<p class="subtitle">
-Path of the Apothecary
-</p>
+<div class="subtitle">
+ระบบตรวจสอบข้อมูลผู้สมัคร
+</div>
 
 </div>
 
+<div class="search-card">
+
 <div class="search-box">
-
-<h2>ตรวจสอบข้อมูลทีม</h2>
-
-<br>
 
 <input
 type="text"
-id="teamCode"
-placeholder="กรอกรหัสทีม เช่น PQ26001">
+id="searchInput"
+placeholder="ค้นหารหัสทีม ชื่อทีม หรือชื่อสมาชิก">
 
 <button onclick="searchTeam()">
 ค้นหา
@@ -187,147 +258,163 @@ placeholder="กรอกรหัสทีม เช่น PQ26001">
 
 </div>
 
-<div class="not-found" id="notFound">
-ไม่พบข้อมูลทีม
 </div>
 
-<div class="result-card" id="resultCard">
+<div class="stats">
 
-<div class="result-title">
-ผลการค้นหา
+<div class="stat">
+<h3 id="teamCount">0</h3>
+<p>ทีมทั้งหมด</p>
 </div>
 
-<table>
-
-<tr>
-<th>ชื่อทีม</th>
-<td id="teamName"></td>
-</tr>
-
-<tr>
-<th>รหัสทีม</th>
-<td id="teamID"></td>
-</tr>
-
-<tr>
-<th>สมาชิกในทีม</th>
-<td id="members"></td>
-</tr>
-
-<tr>
-<th>สถานะการสมัคร</th>
-<td id="status"></td>
-</tr>
-
-</table>
+<div class="stat">
+<h3 id="confirmCount">0</h3>
+<p>ยืนยันแล้ว</p>
+</div>
 
 </div>
 
-<div class="footer">
-"The path of knowledge is the finest prescription for the future."
-</div>
+<div id="results" class="results"></div>
+
+<div id="empty" class="empty"></div>
 
 </div>
 
 <script>
 
-const database = {
+const teams = [
 
-"PQ26001":{
-team:"Rx Warriors",
+{
+code:"P001",
+team:"The Alchemist",
 members:[
-"นาย ก",
-"นาย ข",
-"นาย ค"
+"Anna",
+"Beam",
+"Film"
 ],
-status:"สมัครสำเร็จ"
+status:"ยืนยันแล้ว"
 },
 
-"PQ26002":{
-team:"Drug Hunters",
+{
+code:"P002",
+team:"Potion Hunter",
 members:[
-"นางสาว ง",
-"นางสาว จ",
-"นาย ฉ"
+"Mint",
+"Palm",
+"Gift"
 ],
 status:"รอตรวจสอบ"
 },
 
-"PQ26003":{
-team:"Apothecary Path",
+{
+code:"P003",
+team:"Herbal Masters",
 members:[
-"นาย ช",
-"นาย ซ",
-"นาย ฌ"
+"Nene",
+"Ice",
+"Toon"
 ],
-status:"ไม่ผ่านการตรวจสอบ"
+status:"ยืนยันแล้ว"
 }
 
-};
+];
+
+function renderCards(data){
+
+const results =
+document.getElementById("results");
+
+const empty =
+document.getElementById("empty");
+
+results.innerHTML = "";
+
+if(data.length===0){
+
+empty.innerHTML =
+"❌ ไม่พบข้อมูล";
+
+return;
+}
+
+empty.innerHTML = "";
+
+data.forEach(team=>{
+
+let badge="confirmed";
+
+if(team.status==="รอตรวจสอบ")
+badge="pending";
+
+if(team.status==="ไม่ผ่าน")
+badge="rejected";
+
+results.innerHTML += `
+
+<div class="card">
+
+<div class="team-code">
+${team.code}
+</div>
+
+<div class="team-name">
+${team.team}
+</div>
+
+<div class="member">
+👤 ${team.members.join(", ")}
+</div>
+
+<div class="status ${badge}">
+${team.status}
+</div>
+
+</div>
+
+`;
+
+});
+
+}
 
 function searchTeam(){
 
-const code =
-document.getElementById("teamCode")
+const keyword =
+document
+.getElementById("searchInput")
 .value
-.trim();
+.toLowerCase();
 
-const team =
-database[code];
+const filtered =
+teams.filter(team=>
 
-const resultCard =
-document.getElementById("resultCard");
+team.code.toLowerCase().includes(keyword)
 
-const notFound =
-document.getElementById("notFound");
+||
 
-if(team){
+team.team.toLowerCase().includes(keyword)
 
-notFound.style.display="none";
-resultCard.style.display="block";
+||
 
-document.getElementById("teamName")
-.innerHTML = team.team;
+team.members.join(" ")
+.toLowerCase()
+.includes(keyword)
 
-document.getElementById("teamID")
-.innerHTML = code;
+);
 
-document.getElementById("members")
-.innerHTML =
-team.members
-.map(member=>`<div class="member">${member}</div>`)
-.join("");
-
-let statusClass="";
-
-if(team.status==="สมัครสำเร็จ"){
-statusClass="status-success";
-}
-
-else if(team.status==="รอตรวจสอบ"){
-statusClass="status-pending";
-}
-
-else{
-statusClass="status-reject";
-}
-
-document.getElementById("status")
-.innerHTML =
-`<span class="${statusClass}">
-${team.status}
-</span>`;
+renderCards(filtered);
 
 }
 
-else{
+document.getElementById("teamCount").innerText =
+teams.length;
 
-resultCard.style.display="none";
-notFound.style.display="block";
+document.getElementById("confirmCount").innerText =
+teams.filter(
+t=>t.status==="ยืนยันแล้ว"
+).length;
 
-}
-
-}
+renderCards(teams);
 
 </script>
 
