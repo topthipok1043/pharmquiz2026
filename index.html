@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>PharmQuiz KKU 2026 | Path of the Apothecary</title>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family:'Segoe UI',sans-serif;
+    background:linear-gradient(135deg,#0d2b24,#12372a);
+    min-height:100vh;
+    color:white;
+}
+
+.container{
+    width:90%;
+    max-width:1000px;
+    margin:auto;
+    padding:40px 20px;
+}
+
+.header{
+    text-align:center;
+    margin-bottom:40px;
+}
+
+.logo{
+    width:120px;
+    margin-bottom:15px;
+}
+
+h1{
+    color:#f3d37a;
+    font-size:3rem;
+}
+
+.subtitle{
+    color:#d6c28b;
+    font-size:1.2rem;
+}
+
+.search-box{
+    background:white;
+    padding:30px;
+    border-radius:20px;
+    text-align:center;
+    color:black;
+    margin-bottom:30px;
+}
+
+input{
+    width:70%;
+    padding:15px;
+    border-radius:10px;
+    border:1px solid #ccc;
+    font-size:16px;
+}
+
+button{
+    padding:15px 30px;
+    border:none;
+    border-radius:10px;
+    background:#0d5c47;
+    color:white;
+    cursor:pointer;
+    margin-left:10px;
+    font-size:16px;
+}
+
+button:hover{
+    background:#0f7458;
+}
+
+.result-card{
+    display:none;
+    background:white;
+    color:black;
+    border-radius:20px;
+    overflow:hidden;
+    box-shadow:0 10px 30px rgba(0,0,0,.2);
+}
+
+.result-title{
+    background:#0d5c47;
+    color:white;
+    padding:20px;
+    text-align:center;
+    font-size:24px;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+th{
+    width:30%;
+    background:#f5f5f5;
+    padding:18px;
+    text-align:left;
+}
+
+td{
+    padding:18px;
+}
+
+tr{
+    border-bottom:1px solid #ddd;
+}
+
+.member{
+    margin:5px 0;
+}
+
+.status-success{
+    color:#198754;
+    font-weight:bold;
+}
+
+.status-pending{
+    color:#ff9800;
+    font-weight:bold;
+}
+
+.status-reject{
+    color:#dc3545;
+    font-weight:bold;
+}
+
+.not-found{
+    background:white;
+    color:red;
+    padding:20px;
+    border-radius:15px;
+    text-align:center;
+    display:none;
+}
+
+.footer{
+    text-align:center;
+    margin-top:30px;
+    color:#d6c28b;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="header">
+
+<img src="logo.png" class="logo">
+
+<h1>PHARMQUIZ KKU 2026</h1>
+
+<p class="subtitle">
+Path of the Apothecary
+</p>
+
+</div>
+
+<div class="search-box">
+
+<h2>ตรวจสอบข้อมูลทีม</h2>
+
+<br>
+
+<input
+type="text"
+id="teamCode"
+placeholder="กรอกรหัสทีม เช่น PQ26001">
+
+<button onclick="searchTeam()">
+ค้นหา
+</button>
+
+</div>
+
+<div class="not-found" id="notFound">
+ไม่พบข้อมูลทีม
+</div>
+
+<div class="result-card" id="resultCard">
+
+<div class="result-title">
+ผลการค้นหา
+</div>
+
+<table>
+
+<tr>
+<th>ชื่อทีม</th>
+<td id="teamName"></td>
+</tr>
+
+<tr>
+<th>รหัสทีม</th>
+<td id="teamID"></td>
+</tr>
+
+<tr>
+<th>สมาชิกในทีม</th>
+<td id="members"></td>
+</tr>
+
+<tr>
+<th>สถานะการสมัคร</th>
+<td id="status"></td>
+</tr>
+
+</table>
+
+</div>
+
+<div class="footer">
+"The path of knowledge is the finest prescription for the future."
+</div>
+
+</div>
+
+<script>
+
+const database = {
+
+"PQ26001":{
+team:"Rx Warriors",
+members:[
+"นาย ก",
+"นาย ข",
+"นาย ค"
+],
+status:"สมัครสำเร็จ"
+},
+
+"PQ26002":{
+team:"Drug Hunters",
+members:[
+"นางสาว ง",
+"นางสาว จ",
+"นาย ฉ"
+],
+status:"รอตรวจสอบ"
+},
+
+"PQ26003":{
+team:"Apothecary Path",
+members:[
+"นาย ช",
+"นาย ซ",
+"นาย ฌ"
+],
+status:"ไม่ผ่านการตรวจสอบ"
+}
+
+};
+
+function searchTeam(){
+
+const code =
+document.getElementById("teamCode")
+.value
+.trim();
+
+const team =
+database[code];
+
+const resultCard =
+document.getElementById("resultCard");
+
+const notFound =
+document.getElementById("notFound");
+
+if(team){
+
+notFound.style.display="none";
+resultCard.style.display="block";
+
+document.getElementById("teamName")
+.innerHTML = team.team;
+
+document.getElementById("teamID")
+.innerHTML = code;
+
+document.getElementById("members")
+.innerHTML =
+team.members
+.map(member=>`<div class="member">${member}</div>`)
+.join("");
+
+let statusClass="";
+
+if(team.status==="สมัครสำเร็จ"){
+statusClass="status-success";
+}
+
+else if(team.status==="รอตรวจสอบ"){
+statusClass="status-pending";
+}
+
+else{
+statusClass="status-reject";
+}
+
+document.getElementById("status")
+.innerHTML =
+`<span class="${statusClass}">
+${team.status}
+</span>`;
+
+}
+
+else{
+
+resultCard.style.display="none";
+notFound.style.display="block";
+
+}
+
+}
+
+</script>
+
+</body>
+</html>
